@@ -20,7 +20,8 @@ export default function ModuleModal({
     closeModuleModal
 } : ModuleModalProps) {
     const moduleBoxes = modules?.map((module) => (
-        <div 
+        <div
+            key={module.id}
             className="flex flex-row items-center gap-2 py-2 px-4 hover:bg-lightWhite cursor-pointer"
             onClick={() => handleIncludeModuleToggle(module.id || '')}
         >

@@ -27,7 +27,7 @@ export default function Details({
     // Clean up, just in case
     useEffect(() => {
         () => setOpenModuleModal(false);
-    }, [openModuleModal])
+    }, [openModuleModal, setOpenModuleModal])
 
     useEffect(() => {
         setFilteredItems(modules);

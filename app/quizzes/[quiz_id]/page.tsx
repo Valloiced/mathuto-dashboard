@@ -86,6 +86,8 @@ export default function Quiz() {
             ...prevDetails, 
             numOfQuestions: questions.length
         }))
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [quizType]);
 
     // For editing only
@@ -152,7 +154,7 @@ export default function Quiz() {
         }
 
         fetchModules();
-    }, [params]);
+    }, [params, module_id]);
 
     const handleSubmit = async (form: any) => {
         try {

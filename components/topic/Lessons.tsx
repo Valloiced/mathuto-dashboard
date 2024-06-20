@@ -3,7 +3,7 @@ import SyncLoader from "react-spinners/SyncLoader";
 
 import { MdEdit } from "react-icons/md";
 
-import { Lessons } from '@/global/types';
+import { Lessons as LessonsType } from '@/global/types';
 
 type RedirectOption = 'edit' | 'view';
 
@@ -12,7 +12,7 @@ interface LessonsProps {
     topicId: string,
     title?: string,
     numOfLessons: number,
-    lessons: Lessons[]
+    lessons: LessonsType[]
 }
 
 interface LessonCardProps {

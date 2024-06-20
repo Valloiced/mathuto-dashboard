@@ -17,7 +17,8 @@ interface GetDocumentsByOrderProps {
 
 export const addDocument = async (collectionPath: string, data: any) => {
     try {
-        await firestore.collection(collectionPath).add(data);
+        const response = await firestore.collection(collectionPath).add(data);
+        return response;
     } catch (error: any) {
         console.error('Error adding document', error.message);
         throw new Error(error);
@@ -142,6 +143,40 @@ export const getDocumentsByOrder = async ({
         return snapShotData;
     } catch (error: any) {
         console.error('Error retrieving documents', error.message);
+        throw new Error(error);
+    }
+}
+
+export const updateDocument = async (collectionPath: string, docPath: string, toUpdate: any) => {
+    try {
+        const collecionRef = firestore
+            .collection(collectionPath)
+            .doc(docPath);
+
+        // Initiate updates
+        await collecionRef.update(toUpdate);
+
+        // Fetch the updated document
+        const updatedDocSnapshot = await collecionRef.get();
+
+        // Extract the data from the snapshot
+        const updatedDocData = updatedDocSnapshot.data();
+
+        return updatedDocData;
+    } catch (error: any) {
+        console.error('Error adding documents', error.message);
+        throw new Error(error);
+    }
+}
+
+export const deleteDocument = async (collectionPath: string, docPath: string) => {
+    try {
+        const res = await firestore
+            .collection(collectionPath)
+            .doc(docPath)
+            .delete();
+    } catch (error: any | unknown) {
+        console.error('Error deleting document', error);
         throw new Error(error);
     }
 }

@@ -1,51 +1,68 @@
 import Link from "next/link";
-import Image from "next/image";
-import { MaterialBGs } from "@/public/assets/bg";
+import GridLoader from "react-spinners/GridLoader";
+
+import { LuBookMinus } from "react-icons/lu";
+
+import type { Modules as ModulesType } from '@/global/types';
+
+interface ModulesProps {
+    loading: boolean,
+    modules: ModulesType[] | [];
+}
 
 interface ModuleCardsProps {
-    title: string,
+    id?: string,
+    title?: string,
     numOfLessons?: number,
     numOfTopics?: number
 }
 
-function ModulesCards({ title, numOfLessons, numOfTopics } : ModuleCardsProps) {
-    const getModuleBg = () => {
-        const randIdx = Math.floor(Math.random() * MaterialBGs.length);
-        return MaterialBGs[randIdx];
-    }
+function ModulesCards({ id, title, numOfLessons, numOfTopics } : ModuleCardsProps) {
     return (
-        <Link className="card" href={"/modules/linear-algebra"}>
-            <div className="relative w-full h-0 pb-[50%]">
-                <Image
-                    src={getModuleBg()}
-                    layout="fill"
-                    objectFit="cover"
-                    alt="Module Backgrounds"
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-25">
-                    <div className="relative justify-center items-center z-10">
-                        <p className="font-montserrat font-extrabold text-dark-blue text-xl max-sm:text-3xl">{title}</p>
-                        {/* <div className="absolute py-4 w-10 bg-white bg-opacity-60 top-0 backdrop-blur z-0" /> */}
-                    </div>
+        <Link className="card flex flex-col justify-between px-6 py-6 bg-white gap-4 h-full" href={`modules/${id}`}>
+            <div className="flex flex-row gap-4 items-center">
+                <div className="flex-shrink-0">
+                    <LuBookMinus className="text-dark-blue text-3xl" />
                 </div>
+                <h1 className="font-montserrat font-extrabold text-xl text-dark-blue uppercase">
+                    {title}
+                </h1>
             </div>
-            <div className="bg-white py-2 px-4">
-                <p className="font-poppins font-medium text-xs text-black text-opacity-75">5 Topics | 25 Lessons</p>
+            <div className="flex flex-row gap-2 text-white font-poppins text-xs font-semibold text-center items-center">
+                <p className="bg-black/75 py-1 px-3 rounded-full">{numOfLessons} Lessons</p>
             </div>
         </Link>
     )
 }
 
-export default function Modules() {
+export default function Modules({ loading, modules } : ModulesProps) {
+    const moduleCards = modules?.map((moduleData) => (
+        <ModulesCards
+            key={moduleData.id}
+            id={moduleData.id}
+            title={moduleData.name}
+            numOfLessons={moduleData.noOfItems}
+            numOfTopics={0}
+        />
+    ))
+
     return (
         <div className="flex flex-col gap-4">
-            <div className="grid w-full gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-                <ModulesCards title="Linear Algebra" />
-                <ModulesCards title="Linear Algebra" />
-                <ModulesCards title="Linear Algebra" />
-                <ModulesCards title="Linear Algebra" />
-                <ModulesCards title="Linear Algebra" />
-            </div>
+            {loading ? (
+                <div className="flex flex-row w-full justify-center items-center h-96">
+                    <GridLoader size={10} color="#48B2FF" />
+                </div> 
+            ) : !moduleCards.length ? (
+                <div className="flex flex-row w-full justify-center items-center">
+                    <div className="flex flex-row justify-center w-1/2 py-10 bg-white rounded-3xl shadow-lg">
+                        <h1 className="font-montserrat font-bold text-lg text-dark-blue">No lessons created yet.</h1>
+                    </div>
+                </div>
+            ) : (
+                <div className="grid w-full gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                    {moduleCards}
+                </div>
+            )}
         </div>
     )
 }

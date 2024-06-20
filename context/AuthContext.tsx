@@ -2,7 +2,11 @@
 
 import { useContext, createContext, useState, useEffect, ReactNode } from 'react';
 import { onAuthStateChanged, getAuth, User } from 'firebase/auth';
+import Image from 'next/image';
+import PulseLoader from "react-spinners/PulseLoader";
 import firebaseApp from '../configs/firebase.config';
+
+import Icon from '@/public/assets/icon.png';
 
 // Initialize Firebase Auth
 const auth = getAuth(firebaseApp);
@@ -25,6 +29,20 @@ interface AuthContextProviderProps {
     children: ReactNode;
 }
 
+function Loading() {
+    return (
+        <div className='flex flex-col justify-center items-center gap-10 w-screen h-screen'>
+            <Image
+                src={Icon}
+                width={100}
+                height={100}
+                alt="Mathuto Icon"
+            /> 
+            <PulseLoader color="#48B2FF" size={10} />
+        </div>
+    )
+}
+
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -40,7 +58,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
     return (
         <AuthContext.Provider value={{ user, loading }}>
-            {loading ? <div>Loading...</div> : children}
+            {loading ? <Loading /> : children}
         </AuthContext.Provider>
     );
 };

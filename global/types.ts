@@ -1,11 +1,23 @@
 export interface Modules {
+    id?: string,
+    name?: string,
+    // uid: string
+    creator?: string,
+    createdOn?: Date,
+    noOfItems?: number,
+    __v?: number
+}
+
+export interface Lessons {
     id: string,
     name: string,
-    // uid: string
-    creator: string,
-    createdOn: Date,
-    noOfItems: number,
-    __v: number
+    lessonNo: number,
+    subtopic: string,
+    content: {
+        full: string,
+        summary: string,
+        links: string[]
+    }
 }
 
 export type QuizzesType = 'identification' | 'multiple-choice'
@@ -32,5 +44,21 @@ export interface Quizzes {
         type: QuizzesType
         topic_ids: string[]
     },
-    questions: QuizIdentification | QuizMultipleChoice
+    questions: QuizIdentification[] | QuizMultipleChoice[]
+}
+
+export interface QuizzesScore {
+    id: string,
+    quizId: string,
+    uid: string,
+    username: string,
+    profileImg: string,
+    score: number,
+    time: number,
+    submittedOn: Date,
+    updatedOn: Date,
+    topicIds: string[]
+    retake?: boolean,
+    retakeScore?: number,
+    retakeTime?: number,
 }

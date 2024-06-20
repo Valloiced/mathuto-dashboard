@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import getFonts, { fonts } from "./fonts";
+
 import "../styles/globals.css";
 
 import { AuthContextProvider } from "@/context/AuthContext";

@@ -31,11 +31,14 @@ const config: Config = {
       'dark-red': '#B63D3D',
       'red': '#F87662',
       'light-red': '#FEBCB2',
+      'green': '#00c49c',
+      'light-green': '#d9f6f0',
       'black': '#000000',
       'white': '#FFF',
       'lightWhite': '#F0F0F0',
       'gradientWhite': 'rgba(255,255,255, 0.65)',
       'disabled': '#7D96C0',
+      'transparent': 'transparent'
     }
   },
   plugins: [],

@@ -10,7 +10,8 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-start-rgb))
+  background: rgb(var(--background-start-rgb));
+  scroll-behavior: smooth;
 }
 
 .global-icon {
@@ -22,11 +23,52 @@ body {
 }
 
 .card {
-  @apply flex flex-col overflow-hidden rounded-xl shadow-md hover:cursor-pointer
+  @apply flex flex-col overflow-hidden rounded-xl shadow-md hover:cursor-pointer;
+}
+
+.note {
+  @apply flex flex-row items-center px-4 py-4 w-full gap-4 bg-light-green border-l-4 border-l-green text-dark-blue font-montserrat font-medium text-sm;
+}
+
+input[type="checkbox"] {
+  @apply appearance-none w-5 h-5 border-2 border-black/50 rounded-sm bg-white shrink-0 checked:bg-primary-blue checked:border-0 cursor-pointer;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .mobile-scrollbar::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+
+  .mobile-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .mobile-scrollbar::-webkit-scrollbar-thumb {
+    background: #c4c4c4;
+    border-radius: 2px;
+  }
+
+  .mobile-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  .mobile-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #c4c4c4 #f1f1f1;
   }
 }

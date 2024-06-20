@@ -7,7 +7,7 @@ interface NavigationProps {
 
 export default function Navigation({ activeTab = 'lessons', toggleTab } : NavigationProps) {
     return (
-        <div className="flex flex-row mt-10 w-full border-b-[1px] border-b-black border-opacity-10">
+        <div className="flex flex-row mt-10 w-full border-b-[1px] border-b-black/10">
             <nav 
                 className={`py-1 px-6 bg-white cursor-pointer border-[1px] border-opacity-25 ${activeTab === 'lessons' ? 'border-black text-blue' : 'border-white'}`}
                 onClick={() => toggleTab('lessons')}

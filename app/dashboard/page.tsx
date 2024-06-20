@@ -20,6 +20,8 @@ interface DashboardProps {
 export default function Dashboard() {
     const userData = useProfile();
 
+    const [loading, setLoading] = useState<boolean>(true);
+
     const [dashboardData, setDashboardData] = useState<DashboardProps>({
         moduleCount: 0,
         quizCount: 0,
@@ -36,6 +38,8 @@ export default function Dashboard() {
                 setDashboardData(data);
             } catch (error: any | unknown) {
                 console.error('Something went wrong');
+            } finally {
+                setLoading(false);
             }
         }
 
@@ -46,10 +50,20 @@ export default function Dashboard() {
 
     return (
         <section className="flex flex-col">
-            <Welcome firstName={firstName} />
+            <Welcome 
+                firstName={firstName} 
+                moduleCount={dashboardData.moduleCount} 
+                quizCount={dashboardData.quizCount} 
+            />
             <div className="flex flex-col my-12 gap-10">
-                <PreviewModules modules={dashboardData.modules} />
-                <PreviewQuizzes quizzes={dashboardData.quizzes} />
+                <PreviewModules
+                    loading={loading}
+                    modules={dashboardData.modules} 
+                />
+                <PreviewQuizzes 
+                    loading={loading}
+                    quizzes={dashboardData.quizzes} 
+                />
             </div>
         </section>
     )

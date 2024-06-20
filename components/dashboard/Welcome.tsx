@@ -1,6 +1,12 @@
 import { MdCollectionsBookmark, MdQuiz } from 'react-icons/md';
 
-export default function Welcome({ firstName } : { firstName: string }) {
+interface WelcomeProps {
+    firstName: string,
+    moduleCount: number,
+    quizCount: number
+}
+
+export default function Welcome({ firstName, moduleCount, quizCount } : WelcomeProps) {
     return (
         <div className="flex flex-col width-full shadow-md rounded-md overflow-hidden">
             <div className="flex flex-col px-6 py-6 gap-2 bg-primary-blue">
@@ -15,7 +21,7 @@ export default function Welcome({ firstName } : { firstName: string }) {
                         </div>
                         <div className="flex flex-col items-center text-dark-blue opacity-90">
                             <h2 className="font-montserrat font-medium text-sm">Modules Created</h2>
-                            <h1 className="font-montserrat font-extrabold text-3xl">10</h1>
+                            <h1 className="font-montserrat font-extrabold text-3xl">{moduleCount}</h1>
                         </div>
                     </div>
                 </div>
@@ -26,7 +32,7 @@ export default function Welcome({ firstName } : { firstName: string }) {
                         </div>
                         <div className="flex flex-col items-center text-dark-blue opacity-90">
                             <h2 className="font-montserrat font-medium text-sm">Quizzes Created</h2>
-                            <h1 className="font-montserrat font-extrabold text-3xl">10</h1>
+                            <h1 className="font-montserrat font-extrabold text-3xl">{quizCount}</h1>
                         </div>
                     </div>
                 </div>

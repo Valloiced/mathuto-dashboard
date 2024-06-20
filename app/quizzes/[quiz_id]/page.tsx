@@ -81,13 +81,14 @@ export default function Quiz() {
         = useState<(IdentificationAlt | MultipleChoiceAlt)[]>(() => generateTemplate(quizType));
 
     useEffect(() => {
-        setQuestions(generateTemplate(quizType));
-        setBasicDetails(prevDetails => ({ 
-            ...prevDetails, 
-            numOfQuestions: questions.length
-        }))
+        if (!questions.length) {
+            setQuestions(generateTemplate(quizType));
+            setBasicDetails(prevDetails => ({ 
+                ...prevDetails, 
+                numOfQuestions: questions.length
+            }))
+        }
     
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [quizType]);
 
     // For editing only

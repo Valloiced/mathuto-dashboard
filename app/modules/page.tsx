@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { confirmAlert as createModule } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
 import Header from "@/components/modules/Header";
 import Modules from "@/components/modules/Modules";

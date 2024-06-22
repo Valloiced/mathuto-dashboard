@@ -92,7 +92,10 @@ export default function Lesson() {
 
     const handleDelete = async () => {
         try {
-            const requestBody = { lesson_id: params.lesson_id }
+            const requestBody = { 
+                topic_id: params.topic_id,
+                lesson_id: params.lesson_id
+            }
 
             const res = await fetch(`/api/modules/${params.topic_id}`, {
                 method: 'DELETE',

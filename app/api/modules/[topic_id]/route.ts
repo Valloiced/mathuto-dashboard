@@ -1,4 +1,10 @@
-import { addDocument, getFields, getDocumentsByOrder, updateDocument } from '@/lib/firebase-firestore';
+import { 
+    addDocument, 
+    getFields, 
+    getDocumentsByOrder, 
+    updateDocument
+} from '@/lib/firebase-firestore';
+import { FieldValue } from 'firebase-admin/firestore';
 import { NextResponse, NextRequest } from 'next/server';
 
 export async function GET(
@@ -24,9 +30,10 @@ export async function GET(
             sort: 'desc', 
             orderBy: 'createdOn',
             queries: [
-                ['topic_id', '==', topic_id]
+                ['topic_id', '==', topic_id],
+                ['isDeleted', '!=', true]
             ],
-            limit: 20
+            limit: 100
         });
         
         if (lesson_id) {
@@ -46,7 +53,7 @@ export async function GET(
                     ['details.topic_ids', 'array-contains', topic_id],
                     ['isDeleted', '!=', true]
                 ],
-                limit: 20
+                limit: 100
             })
         }
         
@@ -74,28 +81,26 @@ export async function POST(req: NextRequest) {
         }
 
         // Increment the number of lessons
-        // const topicUpdate = await updateDocument(
-        //     'topics',
-        //     topic_id,
-        //     { noOfItems: FieldValue.increment(1), __v: FieldValue.increment(1) }
-        // );
+        const topicUpdate = await updateDocument(
+            'topics',
+            topic_id,
+            { noOfItems: FieldValue.increment(1), __v: FieldValue.increment(1) }
+        );
 
         const dataToAdd = {
-            // lessonNo: topicUpdate?.noOfItems,
-            lessonNo: Math.floor(Math.random() * 1000),
+            lessonNo: topicUpdate?.noOfItems,
             topic_id: topic_id,
             subtopic: subtopic,
             name: name,
             content: content,
-            createdOn: new Date()
+            createdOn: new Date(),
+            isDeleted: false
         };
 
         const response = await addDocument(
-            'lessons-test',
+            'lessons',
             dataToAdd
         );
-
-        const lessonId = response
 
         return NextResponse.json({ message: 'New lesson added.' });
     } catch (error: any) {
@@ -116,23 +121,52 @@ export async function PUT(req: NextRequest) {
         }
 
         // Increment version of topic allowing the Mathuto application to refetch data
-        // const topicUpdate = await updateDocument(
-        //     'topics',
-        //     topic_id,
-        //     { __v: FieldValue.increment(1) }
-        // );
+        const topicUpdate = await updateDocument(
+            'topics',
+            topic_id,
+            { __v: FieldValue.increment(1) }
+        );
 
         const response = await updateDocument(
-            'lessons-test',
+            'lessons',
             lesson_id,
             { name: name, content: content, subtopic: subtopic }
         );
-
-        console.log(response);
 
         return NextResponse.json({ message: 'New lesson added.' });
     } catch (error: any) {
         console.error(error);
         return NextResponse.json({ message: 'Something went wrong' }, { status: 400 });
+    }
+}
+
+export async function DELETE(request: NextRequest) {
+    try {
+        const { topic_id, lesson_id } = await request.json();
+
+        if (
+            lesson_id === "" || !lesson_id || 
+            topic_id === "" || !topic_id
+        ) {
+            return NextResponse.json({ error: 'Missing parameters.' }, { status: 400 });
+        }
+        // const response = await deleteDocument(
+        //     'lessons',
+        //     lesson_id
+        // );
+
+        const response = await updateDocument('lessons', lesson_id, { isDeleted: true });
+
+        // Decrement the number of lessons
+        const topicUpdate = await updateDocument(
+            'topics',
+            topic_id,
+            { noOfItems: FieldValue.increment(-1), __v: FieldValue.increment(1) }
+        );
+
+        return NextResponse.json({ message: "Deleted successfully" });
+    } catch(error: any | unknown) {
+        console.error(error);
+        return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
     }
 }

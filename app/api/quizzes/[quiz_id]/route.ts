@@ -123,7 +123,7 @@ export async function DELETE(
         // );
         const response = await updateDocument('quizzes', quiz_id, { isDeleted: true });
 
-        return NextResponse.json({ message: "Deleted successfullt" });
+        return NextResponse.json({ message: "Deleted successfully" });
     } catch(error: any | unknown) {
         console.error(error);
         return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });

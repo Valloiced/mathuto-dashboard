@@ -82,7 +82,7 @@ export default function Details({
                 ref={(ref) => { ref && (detailInputRef.current.description = ref) }}
                 className="group w-full px-4 py-2 border-2 border-black/25 rounded-md bg-white focus-within:border-blue"
             >
-                <h3 className="font-montserrat font-medium text-xs group-focus-within:text-blue">Description</h3>
+                <h3 className="font-montserrat font-medium text-xs group-focus-within:text-blue">Description (Required)</h3>
                 <div className="flex flex-col justify-evenly"> 
                     <input 
                         type="text" 

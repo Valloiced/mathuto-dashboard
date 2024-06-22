@@ -41,8 +41,8 @@ function QuizzesCards({ id, title, type, numOfQuestions, topics } : QuizzesCards
                 </h1>
             </div>
             <div className="flex flex-row gap-2 text-white font-poppins text-xs font-semibold text-center items-center">
-                <p className="bg-blue py-1 px-3 rounded-full">{numOfQuestions} Questions</p>
-                <p className="bg-blue py-1 px-3 rounded-full">{quizType}</p>
+                <p className="bg-primary-theme py-1 px-3 rounded-full">{numOfQuestions} Questions</p>
+                <p className="bg-tertiary-theme py-1 px-3 rounded-full">{quizType}</p>
             </div>
             <div className="flex flex-col border-t-2 border-t-black/25 gap-2 py-4">
                 <h2 className="font-poppins text-xs font-semibold text-black/75 ">Modules Included</h2>

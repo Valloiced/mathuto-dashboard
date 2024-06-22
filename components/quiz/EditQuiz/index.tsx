@@ -3,19 +3,25 @@ import {
     Dispatch, 
     SetStateAction, 
     useRef, 
-    MutableRefObject
+    MutableRefObject,
+    useEffect
 } from "react";
+import { toast } from "react-toastify";
+import { confirmAlert } from "react-confirm-alert";
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
 import useModalAutoClose from "@/hooks/useModalAutoClose";
 
 import { MdMoreVert, MdOutlineDeleteOutline } from "react-icons/md";
 
-import Details from "./Details"
-import Questions from "./Questions"
+import Details from "./Details";
+import Questions from "./Questions";
+
+import SaveDialog from "@/components/dialog/SaveDialog";
+import DeleteDialog from "@/components/dialog/DeleteDialog";
 
 import type { BasicDetails, IdentificationAlt, MultipleChoiceAlt } from "@/app/quizzes/[quiz_id]/page";
 import type { Modules, QuizMultipleChoice, QuizzesType } from "@/global/types";
-import { toast } from "react-toastify";
 
 export type DetailDivRefs = {
     title: HTMLDivElement | null;
@@ -29,6 +35,7 @@ interface EditQuizProps {
     questions: (IdentificationAlt | MultipleChoiceAlt)[],
     modules: Modules[],
     canDelete: boolean,
+    isUpdated: boolean,
     setBasicDetails: Dispatch<SetStateAction<BasicDetails>>,
     setQuizType: Dispatch<SetStateAction<QuizzesType>>,
     setQuestions: Dispatch<SetStateAction<(IdentificationAlt | MultipleChoiceAlt)[]>>,
@@ -63,6 +70,7 @@ export default function EditQuiz({
     questions,
     modules,
     canDelete,
+    isUpdated,
     setBasicDetails,
     setQuizType,
     setQuestions,
@@ -77,7 +85,14 @@ export default function EditQuiz({
         description: null,
         moduleIds: null
     });
+    
     const questionInputRef = useRef<HTMLDivElement[]>([]);
+
+    useEffect(() => {
+        const compareDetails = basicDetails 
+        console.log(basicDetails);
+        console.log(questions);
+    }, [])
 
     const handleBasicInput = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
@@ -291,6 +306,9 @@ export default function EditQuiz({
             });
 
             toFocus?.scrollIntoView({ behavior: "smooth" });
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -307,6 +325,8 @@ export default function EditQuiz({
             })
         }
 
+        const isFormFilled = validateForm();
+
         const form = {
             details: {
                 title: basicDetails.title, 
@@ -319,8 +339,25 @@ export default function EditQuiz({
             questions: quizType === 'identification' ? questions : multipleChoiceBuilder(questions)
         };
         
-        validateForm()
-        // handleSubmit(form);
+        if (isFormFilled) {
+            confirmAlert({
+                customUI: ({ onClose }) => 
+                <SaveDialog 
+                    onClose={onClose} 
+                    handler={() => handleSubmit(form)}
+                />
+            });
+        }
+    }
+
+    const handleDeleteData = () => {
+        confirmAlert({
+            customUI: ({ onClose }) => 
+            <DeleteDialog 
+                onClose={onClose} 
+                handler={() => handleDelete()}
+            />
+        });
     }
 
     return (
@@ -331,6 +368,7 @@ export default function EditQuiz({
                     <button 
                         className="global-btn w-full [&]:rounded-md shadow-md"
                         onClick={handleSaveData}
+                        disabled={!isUpdated}
                     >
                         SAVE
                     </button>
@@ -345,7 +383,7 @@ export default function EditQuiz({
                                 <div className="absolute -left-12 -bottom-10 w-24 bg-white py-1 shadow-lg">
                                     <div 
                                         className="flex flex-row items-center justify-center gap-2 w-full py-1 px-2 text-dark-blue hover:bg-lightWhite"
-                                        onClick={handleDelete}
+                                        onClick={handleDeleteData}
                                     >
                                         <MdOutlineDeleteOutline size={20} />
                                         <h2 className="font-poppins text-sm">Delete</h2>

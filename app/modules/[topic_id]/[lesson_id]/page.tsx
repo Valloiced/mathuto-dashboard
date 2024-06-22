@@ -11,8 +11,10 @@ import type { Lessons } from '@/global/types';
 
 export interface EditLessonProps {
     canDelete: boolean,
-    lesson: Lessons;
-    handleSubmit: (form: any) => void;
+    lesson: Lessons,
+    handleSubmit: (form: any) => void,
+    handleDelete: () => void
+
 }
 
 export interface ViewLessonProps {
@@ -88,13 +90,43 @@ export default function Lesson() {
         }
     }
 
+    const handleDelete = async () => {
+        try {
+            const requestBody = { lesson_id: params.lesson_id }
+
+            const res = await fetch(`/api/modules/${params.topic_id}`, {
+                method: 'DELETE',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestBody),
+            });
+
+            if (res.ok) {
+                toast.success('Delete successfully', { 
+                    closeOnClick: true, 
+                    autoClose: 5000 
+                })
+                router.replace(`/modules/${params.topic_id}`)
+            } else {
+                toast.error('Data deletion failed', { 
+                    closeOnClick: true, 
+                    autoClose: 5000 
+                })
+            }
+        } catch (error: any | unknown) {
+            console.error("Submit error", error);
+        }
+    }
+
     return (
         <div>
             {actionType === 'edit' || params.lesson_id === 'create' 
                 ? <EditLesson
                     canDelete={actionType === 'edit'}
                     lesson={lessonData as Lessons}
-                    handleSubmit={handleSubmit} 
+                    handleSubmit={handleSubmit}
+                    handleDelete={handleDelete}
                 /> 
                 : <ViewLesson
                     lesson={lessonData as Lessons}

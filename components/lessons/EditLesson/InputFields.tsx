@@ -10,7 +10,7 @@ export default function InputFields({ primaryInfo, handleBasicInput } : InputFie
                         type="text"
                         name="title"
                         value={primaryInfo.title}
-                        maxLength={60} 
+                        maxLength={100} 
                         className="font-montserrat font-semibold text-sm py-2 w-full text-dark-blue outline-none placeholder:font-normal"
                         placeholder="Add Title"
                         onChange={handleBasicInput}
@@ -25,7 +25,7 @@ export default function InputFields({ primaryInfo, handleBasicInput } : InputFie
                         type="text" 
                         name="summary"
                         value={primaryInfo.summary}
-                        maxLength={200} 
+                        maxLength={1000} 
                         className="font-montserrat font-semibold text-sm py-2 w-full text-dark-blue outline-none placeholder:font-normal"
                         placeholder="Add Summary"
                         onChange={handleBasicInput}

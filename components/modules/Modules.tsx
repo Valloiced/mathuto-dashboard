@@ -19,7 +19,7 @@ interface ModuleCardsProps {
 
 function ModulesCards({ id, title, numOfLessons, numOfTopics } : ModuleCardsProps) {
     return (
-        <Link className="card flex flex-col justify-between px-6 py-6 bg-white gap-4 h-full" href={`modules/${id}`}>
+        <Link className="card flex flex-col justify-between px-6 py-6 bg-white gap-4 h-full" href={`/modules/${id}`}>
             <div className="flex flex-row gap-4 items-center">
                 <div className="flex-shrink-0">
                     <LuBookMinus className="text-dark-blue text-3xl" />

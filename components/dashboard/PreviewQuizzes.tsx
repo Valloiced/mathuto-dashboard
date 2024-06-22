@@ -37,8 +37,8 @@ function QuizzesCards({ id, name, numOfQuestions, quizType } : QuizCardsProps) {
                 </h1>
             </div>
             <div className="flex flex-row gap-2 text-white font-poppins text-xs font-semibold text-center items-center">
-                <p className="bg-blue py-1 px-3 rounded-full">{numOfQuestions} Questions</p>
-                <p className="bg-blue py-1 px-3 rounded-full">{quizType}</p>
+                <p className="bg-primary-theme py-1 px-3 rounded-full">{numOfQuestions} Questions</p>
+                <p className="bg-tertiary-theme py-1 px-3 rounded-full">{quizType}</p>
             </div>
         </Link>
     )

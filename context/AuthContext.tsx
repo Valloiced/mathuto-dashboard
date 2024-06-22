@@ -34,8 +34,8 @@ function Loading() {
         <div className='flex flex-col justify-center items-center gap-10 w-screen h-screen'>
             <Image
                 src={Icon}
-                width={100}
-                height={100}
+                width={200}
+                height={200}
                 alt="Mathuto Icon"
             /> 
             <PulseLoader color="#48B2FF" size={10} />

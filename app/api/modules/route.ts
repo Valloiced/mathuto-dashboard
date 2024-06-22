@@ -1,5 +1,5 @@
 import { auth } from "firebase-admin";
-import { getDocumentsSize, getDocumentsByOrder } from '@/lib/firebase-firestore';
+import { getDocumentsSize, getDocumentsByOrder, addDocument } from '@/lib/firebase-firestore';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -23,5 +23,26 @@ export async function GET (req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+    try {
+        const { moduleName } = await req.json();
 
+        if (moduleName === "" || !moduleName) {
+            return NextResponse.json({ error: 'Missing parameters.' }, { status: 400 });
+        }
+
+        const dataToAdd = {
+            creator: "Berly Binondo-Lambo",
+            name: moduleName,
+            noOfItems: 0,
+            createdOn: new Date(),
+            __v: 0
+        }
+
+        const res = await addDocument('topics', dataToAdd);
+
+        return NextResponse.json({ message: 'New module added.', moduleId: res.id });
+    } catch (error: any | unknown) {
+        console.error('Something went wrong');
+        return NextResponse.json({ message: 'Something went wrong' });
+    }
 }

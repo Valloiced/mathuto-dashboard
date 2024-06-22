@@ -4,11 +4,14 @@ import {
     FormEvent, 
     SetStateAction, 
     useState,
-    useEffect 
+    useEffect
 } from "react";
-import { toast } from "react-toastify";
-
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { confirmAlert } from 'react-confirm-alert'; 
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
+
+import useRouteInterceptor from "@/hooks/useRouteInterceptor";
 
 import { MdOutlineArrowBackIosNew  } from "react-icons/md";
 
@@ -17,6 +20,9 @@ import { EditLessonProps } from "@/app/modules/[topic_id]/[lesson_id]/page";
 import InputFields from "./InputFields";
 import ExternalLinks from "./ExternalLinks";
 import Editor from "./Editor";
+
+import SaveDialog from "@/components/dialog/SaveDialog";
+import DeleteDialog from "@/components/dialog/DeleteDialog";
 
 export type EditorView = 'live' | 'edit' | 'preview';
 
@@ -46,7 +52,12 @@ export interface EditorProps {
     setValue: Dispatch<SetStateAction<string>>
 }
 
-export default function EditLesson({ canDelete, lesson, handleSubmit } : EditLessonProps) {
+export default function EditLesson({ 
+    canDelete, 
+    lesson, 
+    handleSubmit,
+    handleDelete
+} : EditLessonProps) {
     const router = useRouter();
 
     const [editorView, setEditorView] = useState({
@@ -67,6 +78,10 @@ export default function EditLesson({ canDelete, lesson, handleSubmit } : EditLes
     const [links, setLinks] = useState<string[]>(lesson?.content?.links || []);
     const [linkInput, setLinkInput] = useState<string>('');
 
+    const [isUpdated, setIsUpdated] = useState<boolean>(false);
+
+    useRouteInterceptor(isUpdated);
+
     // Sync lesson updates with EditLesson states
     useEffect(() => {
         setPrimaryInfo({
@@ -77,6 +92,24 @@ export default function EditLesson({ canDelete, lesson, handleSubmit } : EditLes
         setFullDescription(lesson?.content?.full || '**Edit your lessons here**');
         setLinks(lesson?.content?.links || []);
     }, [lesson]);
+
+    // Check if there is any changes in the form
+    useEffect(() => {
+        const compareSubtopic = primaryInfo.subtopic !== lesson?.subtopic;
+        const compareTitle = primaryInfo.title !== lesson?.name;
+        const compareLinks = links !== lesson?.content.links;
+        const compareDesc =  fullDescription !== lesson?.content.full;
+        const compareSummary = primaryInfo.summary !== lesson?.content.summary;
+
+        const isUpdated = 
+            compareSubtopic 
+            || compareTitle 
+            || compareLinks 
+            || compareDesc 
+            || compareSummary;
+
+        setIsUpdated(isUpdated);
+    }, [primaryInfo, [...links], fullDescription]);
 
     const handleBasicInput = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
@@ -141,7 +174,24 @@ export default function EditLesson({ canDelete, lesson, handleSubmit } : EditLes
             }
         };
         
-        handleSubmit(form);
+        setIsUpdated(false); // Prevent confirm dialogue to allow redirects
+        confirmAlert({
+            customUI: ({ onClose }) => 
+            <SaveDialog 
+                onClose={onClose} 
+                handler={() => handleSubmit(form)}
+            />
+        });
+    }
+
+    const handleDeleteData = () => {
+        confirmAlert({
+            customUI: ({ onClose }) => 
+            <DeleteDialog 
+                onClose={onClose} 
+                handler={() => handleDelete()}
+            />
+        });
     }
 
     const preview: EditorView = editorView.edit && editorView.preview 
@@ -166,12 +216,14 @@ export default function EditLesson({ canDelete, lesson, handleSubmit } : EditLes
                     <button 
                         className="global-btn w-full [&]:rounded-md"
                         onClick={handleSaveData}
+                        disabled={!isUpdated}
                     >
                         SAVE
                     </button>
                     {canDelete && (
                         <button 
                             className="global-btn [&]:bg-red [&]:hover:bg-light-red w-full [&]:rounded-md"
+                            onClick={handleDeleteData}
                         >
                             DELETE
                         </button>

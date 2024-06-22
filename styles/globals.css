@@ -19,7 +19,7 @@ body {
 }
 
 .global-btn {
-  @apply transition-colors duration-300 bg-tertiary-theme rounded-full text-white font-montserrat font-semibold text-xs tracking-wider cursor-pointer hover:bg-primary-theme
+  @apply transition-colors duration-300 bg-tertiary-theme rounded-full text-white font-montserrat font-semibold text-xs tracking-wider cursor-pointer hover:bg-primary-theme disabled:pointer-events-none disabled:bg-tertiary-theme/50;
 }
 
 .card {

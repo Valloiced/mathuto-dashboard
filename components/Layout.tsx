@@ -76,7 +76,7 @@ export default function Layout({
         ) : (
           <>
             {/* Header */}
-            <header className="flex flex-row w-screen px-6 py-2 bg-blue shadow-md fixed justify-between items-center z-40">
+            <header className="flex flex-row w-screen px-6 py-2 bg-tertiary-theme shadow-md fixed justify-between items-center z-40">
               <GiHamburgerMenu
                 className='hover:cursor-pointer'
                 size={25}
@@ -115,7 +115,7 @@ export default function Layout({
                   </div>
                 )}
               </div>
-              <div className={`flex py-5 justify-center transition-all duration-300 ${!toggleNavDesktop && isDesktop && 'scale-10 opacity-0'}`}>
+              <div className={`flex justify-center transition-all duration-300 ${!toggleNavDesktop && isDesktop && 'scale-10 opacity-0'}`}>
                 <Image
                   src={Logo}
                   width={200}

@@ -3,8 +3,8 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { AuthErrorCodes } from "firebase/auth";
 import { logIn } from "@/lib/firebase-auth";
-import Banner from "@/components/login/Banner";
-import LoginForm from "@/components/login/LoginForm";
+import Banner from "@/components/Login/Banner";
+import LoginForm from "@/components/Login/LoginForm";
 
 import '../../styles/login.css';
 import { toast } from "react-toastify";

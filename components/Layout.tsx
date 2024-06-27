@@ -1,21 +1,20 @@
 'use client';
 
 import { useLayoutEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Bounce, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 
-import { useAuthContext } from '@/context/AuthContext';
-import { useRouter } from 'next/navigation';
 import { logOut } from '@/lib/firebase-auth';
 
 import useProfile from '@/hooks/useProfile';
+import useModalAutoClose from '@/hooks/useModalAutoClose';
 
 import User from '@/public/assets/user.png';
 import Logo from '@/public/assets/logo.png';
-import { MdDashboard, MdCollectionsBookmark, MdQuiz } from 'react-icons/md';
+import { MdDashboard, MdCollectionsBookmark, MdQuiz, MdLogout } from 'react-icons/md';
 import { GiHamburgerMenu } from 'react-icons/gi';
 
 export default function Layout({
@@ -23,10 +22,10 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { user } = useAuthContext();
+  const router = useRouter();
+  const [openTooltip, setOpenTooltip, tooltipRef] = useModalAutoClose(false);
   const userData = useProfile();
 
-  const router = useRouter();
   const pathname = usePathname();
   const currentRootPath = pathname.split('/')[1] || 'dashboard';
 
@@ -53,17 +52,17 @@ export default function Layout({
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     router.replace('/login');
-  //   }
-
-  // }, [userData, user, router])
-
-  // TEMP
   const handleLogout = async () => {
-    await fetch('/api/logout', { method: "POST" });
-    logOut()
+    try {
+      const response = await fetch('/api/logout', { method: "POST" });
+      logOut();
+
+      if (response.ok) {
+        router.replace('/login');
+      }
+    } catch (error: any | unknown) {
+      console.error('Failed to logout: ', error);
+    }
   }
 
   return (
@@ -83,17 +82,31 @@ export default function Layout({
                 color='white'
                 onClick={() => setToggleNavMobile(prev => !prev)}
               />
-              <div className="flex flex-row gap-4 items-center">
+              <div
+                ref={tooltipRef as React.LegacyRef<HTMLDivElement>}
+                className="relative flex flex-row gap-4 items-center"
+              >
                 <p className="font-poppins text-white font-semibold text-md">{userData.username}</p>
-                <div className="py-1 px-2 bg-white rounded-full border-2 border-primary-blue overflow-hidden">
+                <div className="py-1 px-2 bg-white rounded-full border-2 border-primary-blue overflow-hidden cursor-pointer">
                   <Image 
                     src={userData.profileImg ? userData.profileImg : User}
                     width={15}
                     height={10}
                     alt="Profile Image"
-                    onClick={handleLogout}
+                    onClick={() => setOpenTooltip(prev => !prev)}
                   />
                 </div>
+                {openTooltip && (
+                    <div className="absolute -right-1 -bottom-12 w-24 bg-white py-1 shadow-lg">
+                        <div 
+                            className="flex flex-row items-center justify-center gap-2 w-full py-1 px-2 text-dark-blue hover:bg-lightWhite cursor-pointer"
+                            onClick={handleLogout}
+                        >
+                            <MdLogout size={20} />
+                            <h2 className="font-poppins text-sm">Logout</h2>
+                        </div>
+                    </div>
+                )}
               </div>
             </header>
             {/* Sidebar */}

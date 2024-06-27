@@ -1,5 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import MDEditor from "@uiw/react-md-editor";
 
 import { FaLink } from "react-icons/fa6";
 
@@ -12,6 +13,14 @@ export default function ContentView({
 }: ContentViewProps) {
     const [currentTab, setCurrentTab] = useState<LessonTabs>('brief-summary');
     const lessonTabRef = useRef<HTMLDivElement>(null);
+    const markdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        console.log(markdownRef.current);
+        if (markdownRef.current) {
+            // markdownRef.current.heigh
+        }
+    }, [markdownRef.current])
 
     const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
         const container = lessonTabRef.current;
@@ -94,7 +103,7 @@ export default function ContentView({
                         <h2>External Links</h2>
                     </button>
                 </div>
-                <div className='flex flex-col gap-4 mx-4 px-4 py-4 rounded-2xl bg-white'>
+                <div className='flex flex-col gap-4 mx-4 px-4 py-4 rounded-2xl bg-white h-auto'>
                     {currentTab === 'brief-summary' && (
                         <>
                             <h2 className='font-montserrat font-bold text-lg text-dark-blue'>Brief Summary</h2>
@@ -106,9 +115,20 @@ export default function ContentView({
                     {currentTab === 'full-description' && (
                         <>
                             <h2 className='font-montserrat font-bold text-lg text-dark-blue'>Full Description</h2>
-                            <p className='font-poppins font-medium text-sm whitespace-pre-wrap break-words'>
+                            <MDEditor
+                                className='gap-4'
+                                ref={markdownRef}    
+                                preview={'preview'}
+                                value={content?.full}
+                                hideToolbar={true}
+                                draggable={false}
+                                height={'auto'}
+                                // onChange={(value) => setValue(value ? value : "")}
+                            />
+                            {/* <p className='font-poppins font-medium text-sm whitespace-pre-wrap break-words'>
+
                                 {content?.full}
-                            </p>
+                            </p> */}
                         </>
                     )}
                     {currentTab === 'external-links' && (

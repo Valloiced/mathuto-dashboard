@@ -105,7 +105,6 @@ export default function EditQuiz({
     const handleQuizChange = (e: ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault();
 
-        console.log(questions.length);
         if (questions.length !== 0) {
             toast.error('Changing quiz type might wipe out your quiz questions.', {
                 autoClose: 10000,

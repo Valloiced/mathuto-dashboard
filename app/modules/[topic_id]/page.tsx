@@ -70,7 +70,8 @@ export default function Topic() {
     return (
         <div className="flex flex-col">
             <Banner 
-                title={moduleData?.details?.name || ""} 
+                title={moduleData?.details?.name || ""}
+                createdOn={moduleData?.details.createdOn} 
             />
             <Navigation activeTab={activeTab} toggleTab={toggleTab} />
 

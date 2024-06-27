@@ -34,11 +34,12 @@ export default function Editor({ preview, handleEditorView, value, setValue } : 
                         Preview
                     </button>
                 </div>
-                <div className="w-full" data-color-mode="light">
+                <div className="w-full overflow-hidden" data-color-mode="light">
                     <MDEditor       
                         preview={preview}
                         height={600}
                         value={value}
+                        visibleDragbar={false}
                         onChange={(value) => setValue(value ? value : "")}
                     />
                 </div>

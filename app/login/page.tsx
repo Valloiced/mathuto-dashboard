@@ -3,10 +3,11 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { AuthErrorCodes } from "firebase/auth";
 import { logIn } from "@/lib/firebase-auth";
-import Banner from "@/components/Login/Banner";
-import LoginForm from "@/components/Login/LoginForm";
+import Banner from "@/components/login/Banner";
+import LoginForm from "@/components/login/LoginForm";
 
 import '../../styles/login.css';
+import { toast } from "react-toastify";
 
 export default function Login() {
     const router = useRouter();
@@ -20,30 +21,45 @@ export default function Login() {
         message: ''
     });
 
+    const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
+
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        const promiseToast = toast.loading("Logging in...");
 
         try {
             const { email, password } = loginForm; 
 
             if (!email) {
-                return setError({
+                setError({
                     type: 'email',
                     message: 'Please enter your email'
-                })
+                });
+
+                return toast.dismiss(promiseToast);
             }
 
             if (!password) {
-                return setError({
+                setError({
                     type: 'password',
                     message: 'Please enter your password'
                 })
+
+                return toast.dismiss(promiseToast);
             }
 
             const user = await logIn(email, password);
 
             if (!user) {
-                return console.log('Wrong Credentials');
+                toast.update(
+                    promiseToast, 
+                    { 
+                        render: "Invalid Email or Password",
+                        type: "error",
+                        isLoading: false,
+                        autoClose: 5000
+                });
             }
 
             const response = await fetch("/api/login", {
@@ -54,21 +70,33 @@ export default function Login() {
             });
 
             if (response.status === 200) {
-                router.replace('/dashboard');
-            } else {
-                return console.log('Wrong Credentials')
+                toast.update(
+                    promiseToast, 
+                    { 
+                        render: "Login Successfully",
+                        type: "success",
+                        isLoading: false,
+                        autoClose: 5000
+                });
+                return router.replace('/dashboard');
             }
         } catch (error: any | unknown) {
             if (error.code === AuthErrorCodes.INVALID_LOGIN_CREDENTIALS) {
-                // setError('Invalid email or password');
-                /** Toastify */
+                return toast.update(
+                    promiseToast, 
+                    { 
+                        render: "Invalid Email or Password",
+                        type: "error",
+                        isLoading: false,
+                        autoClose: 5000
+                });
             } else if (error.code === AuthErrorCodes.INVALID_EMAIL) {
                 setError({
                     type: 'email',
                     message: 'Invalid Email'
                 });
             }
-            console.log(error.code);
+            return toast.dismiss(promiseToast);
         }
     }
 
@@ -87,6 +115,7 @@ export default function Login() {
             <LoginForm
                 error={error}
                 loginForm={loginForm}
+                isLoggingIn={isLoggingIn}
                 handleSubmit={handleSubmit} 
                 handleInput={handleInput}
             />

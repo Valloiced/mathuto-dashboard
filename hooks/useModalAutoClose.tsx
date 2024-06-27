@@ -12,6 +12,7 @@ export default function useModalAutoClose(defaultValue: boolean): [boolean, Disp
 
     // REQUIRED
     // If not given, auto-closing would not work
+    // Assign here the ref of the parent element that contains the modal
     const modalRef = useRef<HTMLElement | null>(null); 
 
     useEffect(() => {

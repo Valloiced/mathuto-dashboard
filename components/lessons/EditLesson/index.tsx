@@ -11,9 +11,12 @@ import { toast } from "react-toastify";
 import { confirmAlert } from 'react-confirm-alert'; 
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
+import useModalAutoClose from "@/hooks/useModalAutoClose";
 import useRouteInterceptor from "@/hooks/useRouteInterceptor";
 
-import { MdOutlineArrowBackIosNew  } from "react-icons/md";
+import template from "./template";
+
+import { MdMoreVert, MdOutlineArrowBackIosNew, MdOutlineDeleteOutline  } from "react-icons/md";
 
 import { EditLessonProps } from "@/app/modules/[topic_id]/[lesson_id]/page";
 
@@ -58,7 +61,9 @@ export default function EditLesson({
     handleSubmit,
     handleDelete
 } : EditLessonProps) {
+
     const router = useRouter();
+    const [openTooltip, setOpenTooltip, tooltipRef] = useModalAutoClose(false);
 
     const [editorView, setEditorView] = useState({
         edit: true,
@@ -72,7 +77,7 @@ export default function EditLesson({
     });
 
     const [fullDescription, setFullDescription] = useState<string>(
-        lesson?.content?.full || '**Edit your lessons here**'
+        lesson?.content?.full || template
     );
     
     const [links, setLinks] = useState<string[]>(lesson?.content?.links || []);
@@ -89,7 +94,7 @@ export default function EditLesson({
             summary: lesson?.content?.summary || '',
             subtopic: lesson?.subtopic || ''
         });
-        setFullDescription(lesson?.content?.full || '**Edit your lessons here**');
+        setFullDescription(lesson?.content?.full || template);
         setLinks(lesson?.content?.links || []);
     }, [lesson]);
 
@@ -98,7 +103,7 @@ export default function EditLesson({
         const compareSubtopic = primaryInfo.subtopic !== lesson?.subtopic;
         const compareTitle = primaryInfo.title !== lesson?.name;
         const compareLinks = links !== lesson?.content.links;
-        const compareDesc =  fullDescription !== lesson?.content.full;
+        const compareDesc =  (fullDescription !== lesson?.content.full) && (fullDescription !== template);
         const compareSummary = primaryInfo.summary !== lesson?.content.summary;
 
         const isUpdated = 
@@ -212,20 +217,32 @@ export default function EditLesson({
             </div>
             <div className="flex flex-row justify-between">
                 <h1 className="font-montserrat font-bold text-3xl text-dark-blue">Create/Edit Lesson</h1>
-                <div className="flex gap-4 w-48">
+                <div className="flex flex-row gap-4 w-36">
                     <button 
-                        className="global-btn w-full [&]:rounded-md"
+                        className="global-btn w-full [&]:rounded-md shadow-md"
                         onClick={handleSaveData}
                         disabled={!isUpdated}
                     >
                         SAVE
                     </button>
                     {canDelete && (
-                        <button 
-                            className="global-btn [&]:bg-red [&]:hover:bg-light-red w-full [&]:rounded-md"
-                            onClick={handleDeleteData}
+                        <button
+                            ref={tooltipRef as React.LegacyRef<HTMLButtonElement>}
+                            className="relative text-blue bg-none border-0"
+                            onClick={(e) => setOpenTooltip(prev => !prev)}
                         >
-                            DELETE
+                            <MdMoreVert size={25} />
+                            {openTooltip && (
+                                <div className="absolute -left-12 -bottom-10 w-24 bg-white py-1 shadow-lg">
+                                    <div 
+                                        className="flex flex-row items-center justify-center gap-2 w-full py-1 px-2 text-dark-blue hover:bg-lightWhite"
+                                        onClick={handleDeleteData}
+                                    >
+                                        <MdOutlineDeleteOutline size={20} />
+                                        <h2 className="font-poppins text-sm">Delete</h2>
+                                    </div>
+                                </div>
+                            )}
                         </button>
                     )}
                 </div>

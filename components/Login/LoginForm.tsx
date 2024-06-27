@@ -10,7 +10,8 @@ interface LoginProps {
     loginForm: {
         email: string;
         password: string;
-    };
+    },
+    isLoggingIn: boolean,
     handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
     handleInput: (event: ChangeEvent<HTMLInputElement>) => void;
 }
@@ -18,6 +19,7 @@ interface LoginProps {
 export default function Login({
     error,
     loginForm,
+    isLoggingIn,
     handleSubmit,
     handleInput
 } : LoginProps) {
@@ -64,6 +66,7 @@ export default function Login({
                         className="global-btn submit-btn" 
                         type="submit" 
                         value="Login"
+                        disabled={isLoggingIn}
                     />
                     <span className="forgot-password">Forgot Password?</span>
                 </div>

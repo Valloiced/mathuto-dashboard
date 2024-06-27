@@ -52,7 +52,7 @@ export default function ViewLesson({ lesson }: ViewLessonProps) {
                 <DeviceFrameset device="iPhone X">
                     <Frame
                         className='w-full min-h-[120vh] bg-tertiary-blue'
-                        initialContent='<!DOCTYPE html><html class="bg-tertiary-blue mobile-scrollbar"><head><link href="/_next/static/css/app/layout.css" rel="stylesheet"><link href="/_next/static/css/41d710fb0559d038.css" rel="stylesheet"><link href="/_next/static/css/3af4576b8a847ea6.css" rel="stylesheet"><link href="/_next/static/css/34b0be53d932864d.css" rel="stylesheet"><link href="/_next/static/css/028fa15d8dd842b0.css" rel="stylesheet"></head><body><div></div></body></html>'
+                        initialContent='<!DOCTYPE html><html class="bg-tertiary-blue mobile-scrollbar"><head><link href="/_next/static/css/app/layout.css" rel="stylesheet"><link href="/_next/static/css/41d710fb0559d038.css" rel="stylesheet"><link href="/_next/static/css/3af4576b8a847ea6.css" rel="stylesheet"><link href="/_next/static/css/34b0be53d932864d.css" rel="stylesheet"><link href="/_next/static/css/028fa15d8dd842b0.css" rel="stylesheet"><link href="/index.css" rel="stylesheet"></head><body><div></div></body</html>'
                     >
                         <ContentView 
                             name={lesson?.name}

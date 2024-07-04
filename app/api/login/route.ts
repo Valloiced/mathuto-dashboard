@@ -14,6 +14,11 @@ export async function POST(request: NextRequest, response: NextResponse) {
     const decodedToken = await auth().verifyIdToken(idToken);
 
     if (decodedToken) {
+      // If user isn't labeled as admin, do not proceed
+      if (!decodedToken?.admin) {
+        return NextResponse.json({ message: 'Invalid Access' }, { status: 400 }); 
+      }
+
       const expiresIn = 60 * 60 * 24 * 5 * 1000;
       const sessionCookie = await auth().createSessionCookie(idToken, {
         expiresIn,
@@ -49,3 +54,7 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json({ isLogged: true }, { status: 200 });
 }
+
+// export async function GET(request: NextRequest) {
+//   auth().setCustomUserClaims()
+// }

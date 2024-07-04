@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ message: 'New lesson added.' });
     } catch (error: any) {
         console.error(error);
-        return NextResponse.json({ message: 'Something went wrong' });
+        return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
     }
 }
 
@@ -136,7 +136,7 @@ export async function PUT(req: NextRequest) {
         return NextResponse.json({ message: 'New lesson added.' });
     } catch (error: any) {
         console.error(error);
-        return NextResponse.json({ message: 'Something went wrong' }, { status: 400 });
+        return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
     }
 }
 

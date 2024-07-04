@@ -1,5 +1,5 @@
 import firebaseApp from "../configs/firebase.config";
-import { signInWithEmailAndPassword, getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { signInWithEmailAndPassword, getAuth, signOut, sendPasswordResetEmail } from "firebase/auth";
 
 const auth = getAuth(firebaseApp);
 
@@ -24,5 +24,16 @@ export async function logOut() {
     } catch (error: any | unknown) {
         console.error(error.code);
         throw error;
+    }
+}
+
+export const resetPassword = async (email: string) => {
+    try {
+        const res = await sendPasswordResetEmail(auth, email);
+        
+        return { message: 'Password reset email sent successfully' };
+    } catch (error: any | unknown) {
+        console.error('Error sending password reset', error);
+        throw new Error(error);
     }
 }

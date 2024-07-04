@@ -79,6 +79,15 @@ export default function Login() {
                         autoClose: 5000
                 });
                 return router.replace('/dashboard');
+            } else if (response.status === 400) {
+                toast.update(
+                    promiseToast, 
+                    { 
+                        render: "You must be an admin to enter.",
+                        type: "error",
+                        isLoading: false,
+                        autoClose: 5000
+                });
             }
         } catch (error: any | unknown) {
             if (error.code === AuthErrorCodes.INVALID_LOGIN_CREDENTIALS) {
@@ -116,6 +125,7 @@ export default function Login() {
                 error={error}
                 loginForm={loginForm}
                 isLoggingIn={isLoggingIn}
+                router={router}
                 handleSubmit={handleSubmit} 
                 handleInput={handleInput}
             />

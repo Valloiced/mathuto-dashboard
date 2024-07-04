@@ -28,6 +28,7 @@ export default function Layout({
 
   const pathname = usePathname();
   const currentRootPath = pathname.split('/')[1] || 'dashboard';
+  const nonLayoutPaths = ['login', 'forgot-password'];
 
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
   const [toggleNavDesktop, setToggleNavDesktop] = useState<boolean>(true);
@@ -68,7 +69,8 @@ export default function Layout({
   return (
     <>
       <div className="flex h-screen flex-col">
-        {currentRootPath === 'login' ? (
+        {/* Exclude sidebar and navbar non-layout paths */}
+        {nonLayoutPaths.includes(currentRootPath) ? (
           <main>
             {children}
           </main>
@@ -87,11 +89,11 @@ export default function Layout({
                 className="relative flex flex-row gap-4 items-center"
               >
                 <p className="font-poppins text-white font-semibold text-md">{userData.username}</p>
-                <div className="py-1 px-2 bg-white rounded-full border-2 border-primary-blue overflow-hidden cursor-pointer">
+                <div className={`${!userData.profileImg && 'py-1 px-2'} bg-white rounded-full border-2 border-white overflow-hidden cursor-pointer`}>
                   <Image 
                     src={userData.profileImg ? userData.profileImg : User}
-                    width={15}
-                    height={10}
+                    width={userData.profileImg ? 35 : 15}
+                    height={userData.profileImg ? 25 : 10}
                     alt="Profile Image"
                     onClick={() => setOpenTooltip(prev => !prev)}
                   />
